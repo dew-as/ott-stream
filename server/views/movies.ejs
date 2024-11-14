@@ -1,0 +1,82 @@
+<% title='Movies' %>
+
+    <div class="bg-light h-100">
+        <div class="container py-5">
+            <!-- Page Heading -->
+            <h1 class="text-center mb-4">Movie Listing</h1>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mb-4">
+                <a href="movies/report" class="btn btn-primary">See Report By View Count</a>
+                <a href="movies/add-movie" class="btn btn-primary">Add New Movie</a>
+            </div>
+
+            <!-- Movie Table -->
+            <div class="table-responsive">
+                <table class="table align-middle bg-white">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Title</th>
+                            <th>View</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% movies.forEach(movie=> { %>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="<%= movie.thumbnailUrl %>" alt="Movie Poster"
+                                            style="width: 45px; height: 45px;" class="rounded-circle me-3">
+                                        <div>
+                                            <p class="fw-bold mb-0">
+                                                <%= movie.title %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="/movies/movie/<%= movie.id %>" class="btn btn-info btn-sm">View</a>
+                                </td>
+                                <td>
+                                    <a href="/movies/edit/<%= movie.id %>" class="btn btn-warning btn-sm">Edit</a>
+                                </td>
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal<%= movie.id %>">
+                                        Delete
+                                    </button>
+
+                                    <!-- Delete Confirmation Modal -->
+                                    <div class="modal fade" id="deleteModal<%= movie.id %>" tabindex="-1"
+                                        aria-labelledby="deleteModalLabel<%= movie.id %>" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel<%= movie.id %>">Confirm
+                                                        Delete</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete "<%= movie.title %>"?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <a href="/movies/delete/<%= movie.id %>"
+                                                        class="btn btn-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

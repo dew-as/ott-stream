@@ -1,0 +1,39 @@
+<% title='Change-password' %>
+
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+            <h3 class="text-center mb-4">Want to Change Password?</h3>
+            <div class="row d-flex align-items-center justify-content-center h-100">
+                <div class="col-md-8 col-lg-7 col-xl-6">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+                        class="img-fluid" alt="Phone image">
+                </div>
+                <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                    <form action="/change-password" method="POST">
+                        <!-- Current Password field -->
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                                placeholder="Enter current password" required />
+                        </div>
+                        <!-- New Password field -->
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword"
+                                placeholder="Enter new password" required />
+                        </div>
+                        <!-- Confirm Password field -->
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                placeholder="Confirm new password" required />
+                        </div>
+                        <!-- Change Password button -->
+                        <button type="submit" class="btn btn-primary w-100">Change Password</button>
+                        <!-- Back button -->
+                        <a href="/movies" class="btn btn-secondary w-100 mt-2">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>

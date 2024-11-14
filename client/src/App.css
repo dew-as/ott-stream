@@ -1,0 +1,63 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+body {
+  background-color: #d9d9d96c;
+}
+
+/* Remove background and set text color to white and bold when the menu item is active */
+.active-item {
+  background-color: transparent !important;
+  /* Removes blue background */
+  color: white !important;
+  /* Text color to white */
+  font-weight: bold !important;
+  /* Make the text bold */
+}
+
+/* Optionally, you can set the default color to white for menu items */
+.ant-menu-item {
+  color: white;
+}
+
+/* Ensure the active menu item text stays white */
+.ant-menu-item-active {
+  color: white !important;
+}

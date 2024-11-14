@@ -1,0 +1,37 @@
+<% title=user.name %>
+
+    <div class="bg-light">
+        <div class="container py-5">
+            <!-- Page Heading -->
+            <h1 class="text-center mb-4">Watch History for <%= user.name %>
+            </h1>
+            <p class="text-center">Email: <%= user.email %>
+            </p>
+
+            <!-- Watch History Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Movie Name</th>
+                            <th scope="col">Date and Time Watched</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% user.watchHistory.forEach(entry=> { %>
+                            <tr>
+                                <td>
+                                    <a href="/movies/movie/<%= entry.movieId %>">
+                                        <%= entry.movieName %>
+                                    </a>
+                                </td>
+                                <td>
+                                    <%= entry.dateWatched %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

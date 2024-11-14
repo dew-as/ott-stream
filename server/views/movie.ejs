@@ -1,0 +1,39 @@
+<% title='Movies Page' %>
+
+    <div style="background-color: #f0f2f5; padding: 24px;">
+        <div class="container">
+            <h1 class="text-center mb-4">
+                <%= movie.title %>
+            </h1>
+
+            <div class="row">
+                <!-- Left Side: Thumbnail, Title, Description -->
+                <div class="col-md-4 text-center">
+                    <div class="ant-card ant-card-bordered" style="overflow: hidden; border-radius: 8px;">
+                        <!-- Thumbnail Image -->
+                        <img src="<%= movie.thumbnailUrl %>" alt="<%= movie.title %> Thumbnail" class="ant-card-cover"
+                            style="object-fit: cover; width: 100%; aspect-ratio: 16 / 9;" />
+                    </div>
+                    <div class="ant-card-body mt-3">
+                        <!-- Movie Title -->
+                        <h5 class="ant-typography">
+                            <%= movie.title %>
+                        </h5>
+                        <!-- Movie Description -->
+                        <p class="ant-typography ant-typography-secondary">
+                            <%= movie.description %>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Side: Video Player -->
+                <div class="col-md-8">
+                    <video controls
+                        style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <source src="<%= movie.videoUrl %>" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>

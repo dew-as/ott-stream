@@ -1,0 +1,34 @@
+<% title='Top Movies by View Count' %>
+
+    <div class="bg-light py-5">
+        <div class="container" style="max-width: 600px;">
+            <!-- Page Heading -->
+            <h1 class="text-center mb-4">Top Movies by View Count</h1>
+
+            <!-- Movies Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered border-primary">
+                    <thead class="table-primary">
+                        <tr>
+                            <th scope="col" style="width: 70%;">Title</th>
+                            <th scope="col" style="width: 30%;">View Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% movies.sort((a, b)=> b.viewCount - a.viewCount).forEach(movie => { %>
+                            <tr>
+                                <td>
+                                    <a href="/movies/movie/<%= movie.id %>">
+                                        <%= movie.title %>
+                                    </a>
+                                </td>
+                                <td>
+                                    <%= movie.viewCount %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
