@@ -21,6 +21,7 @@ router.put('/editmovie/:id', verifyJWT, verifyAdmin, apiController.editMovie); /
 router.delete('/deletemovie/:id', verifyJWT, verifyAdmin, apiController.deleteMovie); // Delete movie
 router.get('/userlist', verifyJWT, verifyAdmin, apiController.getAllUsers); // Get list of users
 router.get('/userhistory/:id', verifyJWT, verifyAdmin, apiController.getUserHistory); // Get specific user watch history
+router.put('/blockuser/:id', verifyJWT, verifyAdmin, apiController.toggleBlockUser);
 router.get('/report', verifyJWT, verifyAdmin, apiController.getMovieReport); // Generate report on movies
 
 module.exports = router;
