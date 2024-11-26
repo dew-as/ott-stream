@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from 'antd';  // Import Input from Ant Design
 import MovieCard from '../components/Card';
-
-const movies = [
-  { title: 'Movie 1', id: 1, description: 'Description for Movie 1', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 10 },
-  { title: 'Movie 2', id: 2, description: 'Description for Movie 2', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 20 },
-  { title: 'Movie 3', id: 3, description: 'Description for Movie 3', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 15 },
-  { title: 'Movie 4', id: 4, description: 'Description for Movie 4', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 8 },
-  { title: 'Movie 5', id: 5, description: 'Description for Movie 5', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 12 },
-  { title: 'Movie 6', id: 6, description: 'Description for Movie 6', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 10 },
-  { title: 'Movie 7', id: 7, description: 'Description for Movie 7', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 20 },
-  { title: 'Movie 8', id: 8, description: 'Description for Movie 8', thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 15 },
-];
+import axiosConfig from '../axiosConfig';
 
 const MovieList = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [movies, setMovies] = useState([])
 
   // Filter movies based on search term
   const filteredMovies = movies.filter(movie =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  useEffect(() => {
+    const getMovies = async () => {
+      try {
+        const response = await axiosConfig.get('/movielist')
+        setMovies(response.data)
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getMovies()
+  }, [])
 
   return (
     <div className='container mb-5'>
@@ -36,7 +40,7 @@ const MovieList = () => {
       {/* Display Movies */}
       <div className="d-flex flex-wrap justify-content-center">
         {filteredMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard key={movie._id} movie={movie} />
         ))}
       </div>
     </div>

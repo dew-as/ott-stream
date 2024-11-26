@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Input, Button, Form, Row, Col, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import axiosConfig from '../axiosConfig';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -21,15 +22,22 @@ const ChangePassword = () => {
     });
   };
 
-  const handleSubmit = (values) => {
-    // Handle password change logic here
+  const handleSubmit = async (values) => {
     if (values.newPassword === values.confirmPassword) {
-      console.log('Password changed:', values);
-      // Add your password change logic (e.g., API call) here
+      try {
+        const response = await axiosConfig.put('/passwordchange', {
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error.response?.data || error.message);
+      }
     } else {
       console.log('New password and confirm password do not match!');
     }
   };
+
 
   const handleCancel = () => {
     navigate('/movies'); // Navigate to '/movies' on cancel

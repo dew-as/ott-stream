@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Input, Button, Form, Row, Col, Typography } from 'antd';
+import axiosConfig from '../axiosConfig'
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Paragraph } = Typography;
 
 const Register = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,13 +22,19 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     // Handle form submission logic
     if (values.password !== values.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
-    console.log('Form submitted:', values);
+    try {
+      const response = await axiosConfig.post('/register', formData)
+      console.log(response)
+      navigate('/login')
+    } catch (error) {
+      console.log(error.response.data.error);
+    }
   };
 
   return (

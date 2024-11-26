@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { Card } from 'antd';
+import { HeartOutlined, HeartFilled, PlayCircleOutlined } from '@ant-design/icons';
+import { Card, Tooltip, Button } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import { toggleWatchList } from '../utils/apiCalls';
+
+const { Meta } = Card;
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
   const [watchListed, setWatchlisted] = useState(false);
 
   const toggleWatchlist = () => {
-    setWatchlisted(prevState => !prevState); // Toggle the watchlisted state
+    setWatchlisted((prevState) => !prevState);
+    toggleWatchList(movie._id)
   };
 
   const formattedDate = movie?.watchedAt
@@ -25,44 +29,95 @@ const MovieCard = ({ movie }) => {
 
   return (
     <Card
+      hoverable
       style={{
-        maxWidth: 250,
-        margin: '15px',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        width: 250,
+        borderRadius: '12px',
+        overflow: 'hidden',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        margin: '5px'
       }}
       cover={
-        <img
-          alt="movie-thumbnail"
-          src={movie?.thumbnailUrl}
-          style={{ borderRadius: '10px 10px 0 0' }}
-        />
+        <div
+          style={{
+            position: 'relative',
+            height: '350px',
+            overflow: 'hidden',
+            borderBottom: '1px solid #f0f0f0',
+          }}
+        >
+          <img
+            alt="movie-thumbnail"
+            src={movie?.thumbnail}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate(`/movie/${movie._id}`)}
+          />
+          <Tooltip title="Play Now">
+            <PlayCircleOutlined
+              style={{
+                position: 'absolute',
+                bottom: '15px',
+                right: '15px',
+                fontSize: '2rem',
+                color: '#fff',
+                cursor: 'pointer',
+                textShadow: '0 2px 5px rgba(0, 0, 0, 0.7)',
+              }}
+              onClick={() => navigate(`/movie/${movie._id}?play=true`)}
+            />
+          </Tooltip>
+        </div>
       }
     >
-      {/* Movie Title and Heart Icon */}
-      <div className="d-flex justify-content-between align-items-center">
-        <h6
-          className="m-0 cursor-pointer"
-          onClick={() => navigate('/movie/' + movie.id)}
-          style={{ fontSize: '16px', fontWeight: 'bold' }}
-        >
-          {movie?.title}
-        </h6>
-        <div onClick={toggleWatchlist}>
-          {watchListed ? (
-            <HeartFilled className="h3 text-danger" />
-          ) : (
-            <HeartOutlined className="h3 text-danger" />
-          )}
-        </div>
-      </div>
-
-      <hr />
-
-      {/* Description or Watched Date */}
-      <p style={{ marginTop: '10px', fontSize: '14px', color: '#555' }}>
-        {formattedDate ? formattedDate : movie?.description ? movie?.description : <Link to={'/movie/' + movie.id + '?play=true'} className='btn btn-outline-danger'>Watch</Link>}
-      </p>
+      <Meta
+        title={
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}
+              onClick={() => navigate(`/movie/${movie._id}`)}
+            >
+              {movie?.title}
+            </span>
+            <Tooltip title={watchListed ? 'Remove from Watchlist' : 'Add to Watchlist'}>
+              <span onClick={toggleWatchlist}>
+                {watchListed ? (
+                  <HeartFilled style={{ color: '#e63946', fontSize: '1.3rem' }} />
+                ) : (
+                  <HeartOutlined style={{ color: '#e63946', fontSize: '1.3rem' }} />
+                )}
+              </span>
+            </Tooltip>
+          </div>
+        }
+        description={
+          <div style={{ marginTop: '10px' }}>
+            {formattedDate ? (
+              <span style={{ fontSize: '0.9rem', color: '#777' }}>
+                Watched on: {formattedDate}
+              </span>
+            ) : movie?.description ? (
+              <p style={{ fontSize: '0.9rem', color: '#555', marginBottom: '10px' }}>
+                {movie?.description.slice(0, 50)}...
+              </p>
+            ) : null}
+          </div>
+        }
+      />
     </Card>
   );
 };

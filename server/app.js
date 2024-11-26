@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+const cors = require('cors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var dotenv = require('dotenv')
@@ -8,9 +9,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var moviesRouter = require('./routes/movies')
 var apiRoute = require('./routes/apiRoutes')
+var adminRoute = require('./routes/adminRoutes')
 
 const expressLayouts = require('express-ejs-layouts');
 const connectDB = require('./config/db');
+const { verifyJWT, verifyAdmin } = require('./middleware/authMiddleware');
 dotenv.config()
 connectDB()
 
@@ -27,12 +30,25 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 //layout setup
 app.use(expressLayouts);
+
+//cors configuration
+const corsOptions = {
+  origin: ['http://localhost:3000'], // Allowed origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true, // Allow cookies or credentials
+};
+
+app.use(cors(corsOptions));
+
 app.set('layout', 'layouts/main-layout');
 
 app.use('/', indexRouter);
-app.use('/movies', moviesRouter);
+app.use('/movies', verifyJWT, verifyAdmin, moviesRouter);
 app.use('/users', usersRouter);
 app.use('/api', apiRoute)
+app.use('/admin', adminRoute)
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

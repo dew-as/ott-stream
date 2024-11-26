@@ -1,20 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MovieCard from '../components/Card';
+import { getWatchList } from '../utils/apiCalls';
+import axiosConfig from '../axiosConfig';
 
 const WatchList = () => {
-  const movies = [
-    { title: 'Movie 1', id: 1, thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 10 },
-    { title: 'Movie 2', id: 2, thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 20 },
-    { title: 'Movie 3', id: 3, thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 15 },
-    { title: 'Movie 4', id: 4, thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 8 },
-    { title: 'Movie 5', id: 5, thumbnailUrl: 'https://m.media-amazon.com/images/M/MV5BZmU2ODIyMWItMjU3Zi00ZmVhLWIyNDAtMWE5OWU2ZDExMGFiXkEyXkFqcGc@._V1_.jpg', videoUrl: 'https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4', viewCount: 12 }
-  ];
+  const [movies, setMovies] = useState([])
+
+  useEffect(() => {
+    const getWatchList = async () => {
+      try {
+        const response = await axiosConfig.get('/watchlist');
+
+        const formattedMovies = response.data.map((movie) => ({
+          _id: movie._id,
+          title: movie.title,
+          thumbnail: movie.thumbnail,
+        }));
+
+        setMovies(formattedMovies);
+      } catch (error) {
+        console.error('Error fetching watchlist:', error);
+      }
+    };
+
+    getWatchList();
+  }, []);
 
   return (
     <div className='container mb-5'>
-      <h2 className='text-center'>Your Watch List</h2>
+      <h2 className='text-center mt-3'>Your Watch List</h2>
       {/* Display Movies */}
-      <div className="d-flex flex-wrap justify-content-center">
+      <div className="d-flex flex-wrap justify-content-center mt-3">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}

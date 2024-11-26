@@ -1,10 +1,12 @@
-<% title=movie ? "Edit Movie" : "Add New Movie" %>
+<% title=movie ? "Edit Movie" : "Add New Movie" ; %>
     <div class="container mt-5">
         <h2 class="text-center mb-4">
             <%= movie ? "Edit Movie" : "Add New Movie" %>
         </h2>
-        <form action="<%= movie ? `/movie/${movie._id}?_method=PUT` : '/movie' %>" method="POST"
-            enctype="multipart/form-data">
+        <form id="movieForm">
+            <!-- Hidden Input for Action -->
+            <input type="hidden" id="formAction"
+                value="<%= movie ? `admin/editmovie/${movie._id}` : 'admin/addmovie' %>">
 
             <!-- Title Field -->
             <div class="ant-form-item">
@@ -24,27 +26,29 @@
                 </div>
             </div>
 
-            <!-- Thumbnail Upload -->
+            <!-- Thumbnail URL -->
             <div class="ant-form-item">
-                <label for="thumbnail" class="ant-form-item-label"><span>Thumbnail Image</span></label>
+                <label for="thumbnail" class="ant-form-item-label"><span>Thumbnail URL</span></label>
                 <div class="ant-form-item-control">
-                    <input type="file" class="ant-input" id="thumbnail" name="thumbnail" <%=movie ? "" : "required" %>>
-                    <% if (movie && movie.thumbnailUrl) { %>
-                        <img src="<%= movie.thumbnailUrl %>" alt="Current Thumbnail" class="mt-2"
+                    <input type="text" class="ant-input" id="thumbnail" name="thumbnail"
+                        placeholder="Enter thumbnail URL" value="<%= movie ? movie.thumbnail : '' %>" required>
+                    <% if (movie && movie.thumbnail) { %>
+                        <img src="<%= movie.thumbnail %>" alt="Current Thumbnail" class="mt-2"
                             style="width: 150px; border-radius: 4px;">
                         <small class="ant-form-text">Current thumbnail image</small>
                         <% } %>
                 </div>
             </div>
 
-            <!-- Video Upload -->
+            <!-- Video URL -->
             <div class="ant-form-item">
-                <label for="vdo" class="ant-form-item-label"><span>Video File</span></label>
+                <label for="vdo" class="ant-form-item-label"><span>Video URL</span></label>
                 <div class="ant-form-item-control">
-                    <input type="file" class="ant-input" id="vdo" name="vdo" <%=movie ? "" : "required" %>>
-                    <% if (movie && movie.videoUrl) { %>
+                    <input type="text" class="ant-input" id="vdo" name="vdo" placeholder="Enter video URL"
+                        value="<%= movie ? movie.video : '' %>" required>
+                    <% if (movie && movie.video) { %>
                         <video width="320" height="240" controls class="mt-2" style="border-radius: 4px;">
-                            <source src="<%= movie.videoUrl %>" type="video/mp4">
+                            <source src="<%= movie.video %>" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                         <small class="ant-form-text">Current video file</small>

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Input, Button, Form, Row, Col, Typography } from 'antd';
+import axiosConfig from '../axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Paragraph } = Typography;
 
 const Login = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,9 +20,17 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     // Handle form submission logic
-    console.log('Form submitted:', values);
+    try {
+      const response = await axiosConfig.post('/login', formData)
+      console.log(response)
+      navigate('/movies')
+    } catch (error) {
+      // console.log(error.response.data.error);
+      console.log(error);
+      
+    }
   };
 
   return (

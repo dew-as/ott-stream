@@ -11,8 +11,8 @@
                 <div class="col-md-4 text-center">
                     <div class="ant-card ant-card-bordered" style="overflow: hidden; border-radius: 8px;">
                         <!-- Thumbnail Image -->
-                        <img src="<%= movie.thumbnailUrl %>" alt="<%= movie.title %> Thumbnail" class="ant-card-cover"
-                            style="object-fit: cover; width: 100%; aspect-ratio: 16 / 9;" />
+                        <img src="<%= movie.thumbnail %>" alt="<%= movie.title %> Thumbnail" class="ant-card-cover"
+                            style="object-fit: cover; width: 100%; aspect-ratio: 9 / 16;" />
                     </div>
                     <div class="ant-card-body mt-3">
                         <!-- Movie Title -->
@@ -30,7 +30,7 @@
                 <div class="col-md-8">
                     <video controls
                         style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <source src="<%= movie.videoUrl %>" type="video/mp4" />
+                        <source src="<%= movie.video %>" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>

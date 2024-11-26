@@ -13,6 +13,12 @@ exports.registerUser = async (req, res) => {
     }
 
     try {
+        // Check if the user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ error: 'User already exists' });
+        }
+
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -22,9 +28,11 @@ exports.registerUser = async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(400).json({ error: 'Failed to register user' });
+        console.error(error);
+        res.status(500).json({ error: 'Failed to register user' });
     }
 };
+
 
 
 // Login user/admin
@@ -131,10 +139,10 @@ exports.addToWatchHistory = async (req, res) => {
 
         if (existingMovieIndex > -1) {
             // If movie exists, update the entry (replace or update timestamp)
-            user.watchHistory[existingMovieIndex] = { movie: movieId, updatedAt: new Date() };
+            user.watchHistory[existingMovieIndex] = { movie: movieId, watchedAt: new Date() };
         } else {
             // If movie doesn't exist, add a new entry
-            user.watchHistory.push({ movie: movieId, addedAt: new Date() });
+            user.watchHistory.push({ movie: movieId, watchedAt: new Date() });
         }
 
         await user.save();
@@ -152,25 +160,6 @@ exports.getWatchHistory = async (req, res) => {
         res.status(200).json(user.watchHistory);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch watch history' });
-    }
-};
-
-exports.toggleBlockUser = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        // Find the user by ID
-        const user = await User.findById(id);
-        if (!user) return res.status(404).json({ error: 'User not found' });
-
-        // Toggle the `isBlocked` status
-        user.isBlocked = !user.isBlocked;
-        await user.save();
-
-        const status = user.isBlocked ? 'blocked' : 'unblocked';
-        res.status(200).json({ message: `User has been ${status} successfully` });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to toggle user block status' });
     }
 };
 
@@ -196,91 +185,3 @@ exports.logoutUser = (req, res) => {
     res.clearCookie('authToken');
     res.status(200).json({ message: 'Logged out successfully' });
 };
-
-
-exports.addMovie = async (req, res) => {
-    const { title, description, thumbnail, video } = req.body;
-    try {
-        const newMovie = new Movie({ title, description, thumbnail, video });
-        await newMovie.save();
-        res.status(201).json({ message: 'Movie added successfully', movie: newMovie });
-    } catch (error) {
-        console.log(error);
-
-        res.status(400).json({ error: 'Failed to add movie' });
-    }
-};
-
-exports.editMovie = async (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-    try {
-        const updatedMovie = await Movie.findByIdAndUpdate(id, updates, { new: true });
-        if (!updatedMovie) return res.status(404).json({ error: 'Movie not found' });
-        res.status(200).json({ message: 'Movie updated successfully', movie: updatedMovie });
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to update movie' });
-    }
-};
-
-
-exports.deleteMovie = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const deletedMovie = await Movie.findByIdAndDelete(id);
-        if (!deletedMovie) return res.status(404).json({ error: 'Movie not found' });
-        res.status(200).json({ message: 'Movie deleted successfully' });
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to delete movie' });
-    }
-};
-
-
-exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await User.find().select('-password'); // Exclude passwords
-        res.status(200).json(users);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch users' });
-    }
-};
-
-
-exports.getUserHistory = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const user = await User.findById(id).populate('watchHistory.movie');
-        if (!user) return res.status(404).json({ error: 'User not found' });
-        res.status(200).json(user.watchHistory);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user history' });
-    }
-};
-
-
-exports.getMovieReport = async (req, res) => {
-    try {
-        const report = await Movie.aggregate([
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: '_id',
-                    foreignField: 'watchHistory.movie',
-                    as: 'views',
-                },
-            },
-            {
-                $project: {
-                    title: 1,
-                    genre: 1,
-                    viewCount: { $size: '$views' },
-                },
-            },
-            { $sort: { viewCount: -1 } }, // Sort by view count descending
-        ]);
-        res.status(200).json(report);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to generate report' });
-    }
-};
-

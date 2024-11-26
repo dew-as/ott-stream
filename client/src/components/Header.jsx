@@ -20,7 +20,7 @@ function Navbar() {
         { label: 'Watch List', path: '/watchlist' }, // Label without count
         { label: 'History', path: '/history' },
         { label: <i className="bi bi-person-circle h3"></i>, path: '/changepass' },
-        { label: 'Logout', path: '/' },
+        { label: 'Logout', path: '/?logout=true' },
     ];
 
     return (

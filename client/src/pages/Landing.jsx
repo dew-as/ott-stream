@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Card, Row, Col, Typography } from 'antd';
 import { UserAddOutlined, LoginOutlined } from '@ant-design/icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import axiosConfig from '../axiosConfig';
 
 const { Title, Paragraph } = Typography;
 
 const Landing = () => {
+  const [searchParams] = useSearchParams();
+  const logout = searchParams.get('logout');
+
+  useEffect(() => {
+    const handleLogout = async () => {
+      try {
+        if (logout) {
+          const response = await axiosConfig.post('/logout')
+          console.log(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    handleLogout()
+  }, [logout])
+
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <Row justify="center" align="middle" className="w-100">
