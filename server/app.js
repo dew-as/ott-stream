@@ -45,7 +45,7 @@ app.set('layout', 'layouts/main-layout');
 
 app.use('/', indexRouter);
 app.use('/movies', verifyJWT, verifyAdmin, moviesRouter);
-app.use('/users', usersRouter);
+app.use('/users', verifyJWT, verifyAdmin, usersRouter);
 app.use('/api', apiRoute)
 app.use('/admin', adminRoute)
 

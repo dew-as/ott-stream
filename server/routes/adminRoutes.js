@@ -15,7 +15,7 @@ router.get('/userlist', verifyJWT, verifyAdmin, adminController.getAllUsers); //
 router.get('/userhistory/:id', verifyJWT, verifyAdmin, adminController.getUserHistory); // Get specific user watch history
 router.put('/blockuser/:id', verifyJWT, verifyAdmin, adminController.toggleBlockUser);
 router.get('/report', verifyJWT, verifyAdmin, adminController.getMovieReport); // Generate report on movies
-router.put('/passwordchange', verifyJWT, apiController.changePassword); // Change password
+router.post('/passwordchange', verifyJWT, apiController.changePassword); // Change password
 router.post('/logout', verifyJWT, apiController.logoutUser); // Logout user
 
 module.exports = router;

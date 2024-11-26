@@ -1,31 +1,54 @@
 var express = require('express');
+const User = require('../models/User');
 var router = express.Router();
 
-const users = [
-  {
-    id: 1, email: "john.doe@example.com", name: "John Doe", isBlocked: false, watchHistory: [
-      { movieId: 1, movieName: "Inception", dateWatched: "2024-11-01 14:30:00" },
-      { movieId: 2, movieName: "The Dark Knight", dateWatched: "2024-11-02 18:00:00" },
-      { movieId: 3, movieName: "Interstellar", dateWatched: "2024-11-03 20:15:00" }
-    ]
-  },
-  {
-    id: 2, email: "jane.smith@example.com", name: "Jane Smith", isBlocked: true, watchHistory: [
-      { movieId: 4, movieName: "Inception", dateWatched: "2024-11-01 14:30:00" },
-      { movieId: 5, movieName: "The Dark Knight", dateWatched: "2024-11-02 18:00:00" },
-      { movieId: 2, movieName: "Interstellar", dateWatched: "2024-11-03 20:15:00" }
-    ]
-  }
-];
+/* GET all non-admin users */
+router.get('/', async function (req, res, next) {
+  try {
+    // Find users where isAdmin is false
+    const users = await User.find({ isAdmin: false });
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.render('users', { users: users });
+    // Check if the result is empty
+    if (!users || users.length === 0) {
+      return res.status(404).send('No non-admin users found.');
+    }
+
+    // Render the 'users' view and pass the retrieved users
+    res.render('users', { users: users });
+  } catch (error) {
+    console.error('Error fetching users:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
-/* GET users listing. */
-router.get('/watch-history/:id', function (req, res, next) {
-  res.render('user', { user: users[0] });
+
+/* GET a user's watch history */
+router.get('/watch-history/:id', async function (req, res, next) {
+  const id = req.params.id;
+
+  if (!id) {
+    return res.status(400).send('User ID is required.');
+  }
+
+  try {
+    const user = await User.findById(id).populate('watchHistory.movie');
+
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+    console.log(user);
+
+    res.render('user', { user: user });
+  } catch (error) {
+    console.error(`Error fetching user with ID ${id}:`, error.message);
+
+    // Handle invalid ObjectId error separately
+    if (error.kind === 'ObjectId') {
+      return res.status(400).send('Invalid User ID format.');
+    }
+
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 module.exports = router;

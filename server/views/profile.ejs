@@ -1,4 +1,4 @@
-<% title='Change-password' %>
+<% title='Profile' %>
 
     <section class="vh-100">
         <div class="container py-5 h-100">
@@ -9,7 +9,7 @@
                         class="img-fluid" alt="Phone image">
                 </div>
                 <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-                    <form action="/change-password" method="POST">
+                    <form id="changePasswordForm">
                         <!-- Current Password field -->
                         <div class="mb-3">
                             <label for="currentPassword" class="form-label">Current Password</label>
@@ -33,7 +33,49 @@
                         <!-- Back button -->
                         <a href="/movies" class="btn btn-secondary w-100 mt-2">Back</a>
                     </form>
+                    <div id="message" class="mt-3 text-center"></div>
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById('changePasswordForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const messageDiv = document.getElementById('message');
+
+            // Check if new password matches confirmation
+            if (newPassword !== confirmPassword) {
+                messageDiv.innerHTML = '<span class="text-danger">New passwords do not match!</span>';
+                return;
+            }
+
+            try {
+                const response = await fetch('admin/passwordchange', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageDiv.innerHTML = `<span class="text-success">${data.message}</span>`;
+                    setTimeout(()=>{
+                        window.location.href = '/movies'
+                    },1000)
+                } else {
+                    messageDiv.innerHTML = `<span class="text-danger">${data.error || 'Failed to update password'}</span>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.innerHTML = '<span class="text-danger">An error occurred while changing the password.</span>';
+            }
+        });
+    </script>

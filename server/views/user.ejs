@@ -8,30 +8,36 @@
             <p class="text-center">Email: <%= user.email %>
             </p>
 
-            <!-- Watch History Table -->
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">Movie Name</th>
-                            <th scope="col">Date and Time Watched</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% user.watchHistory.forEach(entry=> { %>
+            <!-- Watch History Section -->
+            <% if (user.watchHistory.length> 0) { %>
+                <!-- Watch History Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
                             <tr>
-                                <td>
-                                    <a href="/movies/movie/<%= entry.movieId %>">
-                                        <%= entry.movieName %>
-                                    </a>
-                                </td>
-                                <td>
-                                    <%= entry.dateWatched %>
-                                </td>
+                                <th scope="col">Movie Name</th>
+                                <th scope="col">Date and Time Watched</th>
                             </tr>
-                            <% }); %>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <% user.watchHistory.forEach(entry=> { %>
+                                <tr>
+                                    <td>
+                                        <a href="/movies/movie/<%= entry.movie._id %>">
+                                            <%= entry.movie.title %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <%= new Date(entry.watchedAt).toLocaleString() %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } else { %>
+                    <!-- No Watch History Message -->
+                    <p class="text-center text-muted mt-4">No watch history available for this user.</p>
+                    <% } %>
         </div>
     </div>
